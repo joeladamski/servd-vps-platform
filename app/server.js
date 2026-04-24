@@ -98,6 +98,7 @@ function renderLayout({ title, content, user, notice, bodyClass = "" }) {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#171717">
     <title>${escapeHtml(title)}</title>
     <style>
       :root {
@@ -116,6 +117,13 @@ function renderLayout({ title, content, user, notice, bodyClass = "" }) {
         margin: 0;
         min-height: 100vh;
         color: #f7f2e8;
+      }
+
+      body.public-profile-page {
+        color: #f7f2e8;
+        background:
+          radial-gradient(circle at top, rgba(255, 210, 118, 0.15), transparent 35%),
+          linear-gradient(160deg, #111111 0%, #171717 60%, #232323 100%);
       }
 
       a {
@@ -437,18 +445,6 @@ function renderLayout({ title, content, user, notice, bodyClass = "" }) {
           padding: 34px 22px 24px;
         }
 
-        body.public-profile-page {
-          color: #1d1d1f;
-          background: #f5f5f7;
-        }
-
-        body.public-profile-page .card.public-profile-card {
-          background: #ffffff;
-          border: 1px solid rgba(0, 0, 0, 0.06);
-          box-shadow: 0 18px 44px rgba(17, 17, 17, 0.12);
-          backdrop-filter: none;
-        }
-
         .public-profile-avatar {
           width: 260px;
           height: 260px;
@@ -457,35 +453,6 @@ function renderLayout({ title, content, user, notice, bodyClass = "" }) {
             0 18px 42px rgba(0, 0, 0, 0.2),
             0 8px 18px rgba(0, 0, 0, 0.09),
             0 0 0 1px rgba(0, 0, 0, 0.06);
-        }
-
-        body.public-profile-page .public-profile-name {
-          color: #1d1d1f;
-        }
-
-        body.public-profile-page .public-profile-username {
-          color: #4d4d52;
-        }
-
-        body.public-profile-page .public-profile-bio,
-        body.public-profile-page .public-link-url {
-          color: #5e5e63;
-        }
-
-        body.public-profile-page .public-links a {
-          background: #f9f9fb;
-          border: 1px solid rgba(17, 17, 17, 0.08);
-          box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.85),
-            0 10px 24px rgba(17, 17, 17, 0.08);
-          border-radius: 20px;
-        }
-
-        body.public-profile-page .public-links a:hover {
-          transform: translateY(-1px);
-          background: #ffffff;
-          border-color: rgba(17, 17, 17, 0.14);
-          box-shadow: 0 14px 30px rgba(17, 17, 17, 0.12);
         }
       }
     </style>

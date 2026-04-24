@@ -334,24 +334,24 @@ function renderLayout({ title, content, user, notice }) {
       .public-profile-card {
         max-width: 860px;
         margin: 0 auto;
-        padding: 40px 32px 32px;
+        padding: 48px 40px 40px;
       }
 
       .public-profile-header {
         display: grid;
         justify-items: center;
         text-align: center;
-        gap: 14px;
-        margin-bottom: 28px;
+        gap: 18px;
+        margin-bottom: 34px;
       }
 
       .public-profile-avatar {
-        width: 144px;
-        height: 144px;
-        border-radius: 36px;
+        width: 200px;
+        height: 200px;
+        border-radius: 44px;
         box-shadow:
-          0 20px 40px rgba(0, 0, 0, 0.28),
-          0 0 0 1px rgba(255, 210, 118, 0.16);
+          0 24px 50px rgba(0, 0, 0, 0.28),
+          0 0 0 1px rgba(255, 210, 118, 0.2);
       }
 
       .public-profile-name {
@@ -377,18 +377,18 @@ function renderLayout({ title, content, user, notice }) {
       }
 
       .public-profile-links {
-        margin-top: 30px;
+        margin-top: 40px;
       }
 
       .public-links {
         display: grid;
-        gap: 14px;
+        gap: 16px;
       }
 
       .public-links a {
         display: block;
         text-decoration: none;
-        padding: 20px 22px;
+        padding: 22px 24px;
         border-radius: 22px;
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
@@ -411,9 +411,9 @@ function renderLayout({ title, content, user, notice }) {
 
       .public-link-title {
         display: block;
-        font-size: 1.05rem;
+        font-size: 1.08rem;
         font-weight: 700;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
       }
 
       .public-link-url {
@@ -433,13 +433,13 @@ function renderLayout({ title, content, user, notice }) {
         }
 
         .public-profile-card {
-          padding: 32px 22px 22px;
+          padding: 34px 22px 24px;
         }
 
         .public-profile-avatar {
-          width: 120px;
-          height: 120px;
-          border-radius: 30px;
+          width: 160px;
+          height: 160px;
+          border-radius: 36px;
         }
       }
     </style>

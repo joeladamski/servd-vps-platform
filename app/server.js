@@ -99,11 +99,15 @@ function renderLayout({ title, content, user, notice, bodyClass = "" }) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#171717">
+    <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#171717" media="(prefers-color-scheme: light)">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>${escapeHtml(title)}</title>
     <style>
       :root {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         color: #f7f2e8;
+        color-scheme: dark;
         background:
           radial-gradient(circle at top, rgba(255, 210, 118, 0.15), transparent 35%),
           linear-gradient(160deg, #111111 0%, #171717 60%, #232323 100%);
@@ -113,10 +117,22 @@ function renderLayout({ title, content, user, notice, bodyClass = "" }) {
         box-sizing: border-box;
       }
 
+      html,
       body {
         margin: 0;
-        min-height: 100vh;
+        min-height: 100dvh;
         color: #f7f2e8;
+        background:
+          radial-gradient(circle at top, rgba(255, 210, 118, 0.15), transparent 35%),
+          linear-gradient(160deg, #111111 0%, #171717 60%, #232323 100%);
+      }
+
+      html {
+        overscroll-behavior-y: none;
+      }
+
+      body {
+        overscroll-behavior-y: none;
       }
 
       body.public-profile-page {
@@ -133,7 +149,14 @@ function renderLayout({ title, content, user, notice, bodyClass = "" }) {
       .shell {
         width: min(1100px, calc(100% - 32px));
         margin: 0 auto;
-        padding: 24px 0 48px;
+        min-height: 100dvh;
+        padding:
+          calc(24px + env(safe-area-inset-top))
+          0
+          calc(48px + env(safe-area-inset-bottom));
+        background:
+          radial-gradient(circle at top, rgba(255, 210, 118, 0.15), transparent 35%),
+          linear-gradient(160deg, #111111 0%, #171717 60%, #232323 100%);
       }
 
       nav {
@@ -443,6 +466,8 @@ function renderLayout({ title, content, user, notice, bodyClass = "" }) {
 
         .public-profile-card {
           padding: 34px 22px 24px;
+          background: rgba(15, 15, 15, 0.78);
+          border-color: rgba(247, 242, 232, 0.16);
         }
 
         .public-profile-avatar {
@@ -453,6 +478,18 @@ function renderLayout({ title, content, user, notice, bodyClass = "" }) {
             0 18px 42px rgba(0, 0, 0, 0.2),
             0 8px 18px rgba(0, 0, 0, 0.09),
             0 0 0 1px rgba(0, 0, 0, 0.06);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html,
+        body,
+        .shell,
+        body.public-profile-page {
+          background:
+            radial-gradient(circle at top, rgba(255, 210, 118, 0.15), transparent 35%),
+            linear-gradient(160deg, #111111 0%, #171717 60%, #232323 100%);
+          color: #f7f2e8;
         }
       }
     </style>

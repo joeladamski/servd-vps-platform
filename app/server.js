@@ -75,7 +75,7 @@ function validateUsername(username) {
   return /^[a-z0-9_]{3,24}$/.test(username);
 }
 
-function renderLayout({ title, content, user, notice }) {
+function renderLayout({ title, content, user, notice, bodyClass = "" }) {
   const nav = user
     ? `
       <nav>
@@ -346,11 +346,12 @@ function renderLayout({ title, content, user, notice }) {
       }
 
       .public-profile-avatar {
-        width: 200px;
-        height: 200px;
+        width: 500px;
+        height: 500px;
         border-radius: 44px;
         box-shadow:
-          0 24px 50px rgba(0, 0, 0, 0.28),
+          0 42px 90px rgba(0, 0, 0, 0.45),
+          0 20px 44px rgba(0, 0, 0, 0.22),
           0 0 0 1px rgba(255, 210, 118, 0.2);
       }
 
@@ -436,15 +437,60 @@ function renderLayout({ title, content, user, notice }) {
           padding: 34px 22px 24px;
         }
 
+        body.public-profile-page {
+          color: #1d1d1f;
+          background: #f5f5f7;
+        }
+
+        body.public-profile-page .card.public-profile-card {
+          background: #ffffff;
+          border: 1px solid rgba(0, 0, 0, 0.06);
+          box-shadow: 0 18px 44px rgba(17, 17, 17, 0.12);
+          backdrop-filter: none;
+        }
+
         .public-profile-avatar {
-          width: 160px;
-          height: 160px;
-          border-radius: 36px;
+          width: 260px;
+          height: 260px;
+          border-radius: 40px;
+          box-shadow:
+            0 18px 42px rgba(0, 0, 0, 0.2),
+            0 8px 18px rgba(0, 0, 0, 0.09),
+            0 0 0 1px rgba(0, 0, 0, 0.06);
+        }
+
+        body.public-profile-page .public-profile-name {
+          color: #1d1d1f;
+        }
+
+        body.public-profile-page .public-profile-username {
+          color: #4d4d52;
+        }
+
+        body.public-profile-page .public-profile-bio,
+        body.public-profile-page .public-link-url {
+          color: #5e5e63;
+        }
+
+        body.public-profile-page .public-links a {
+          background: #f9f9fb;
+          border: 1px solid rgba(17, 17, 17, 0.08);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.85),
+            0 10px 24px rgba(17, 17, 17, 0.08);
+          border-radius: 20px;
+        }
+
+        body.public-profile-page .public-links a:hover {
+          transform: translateY(-1px);
+          background: #ffffff;
+          border-color: rgba(17, 17, 17, 0.14);
+          box-shadow: 0 14px 30px rgba(17, 17, 17, 0.12);
         }
       }
     </style>
   </head>
-  <body>
+  <body class="${escapeHtml(bodyClass)}">
     <div class="shell">
       ${nav}
       ${notice ? `<div class="notice">${escapeHtml(notice)}</div>` : ""}
@@ -1010,6 +1056,7 @@ app.get("/u/:username", async (req, res, next) => {
         content,
         user: req.currentUser,
         notice: req.query.notice,
+        bodyClass: "public-profile-page",
       })
     );
   } catch (error) {

@@ -15,6 +15,10 @@ services:
       - --certificatesresolvers.letsencrypt.acme.email=get@servd.pro
       - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
       - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+      # LinkStack's container serves HTTPS with an internal self-signed
+      # certificate. Traefik terminates public TLS and proxies to that internal
+      # HTTPS endpoint so LinkStack generates correct HTTPS asset URLs.
+      - --serversTransport.insecureSkipVerify=true
     ports:
       - "80:80"
       - "443:443"
@@ -41,11 +45,53 @@ services:
     depends_on:
       - postgres
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.app.rule=Host(`get.servd.pro`)
+      # get.servd.pro is now reserved for LinkStack below. The legacy Node app
+      # still runs internally. Set LEGACY_APP_TRAEFIK_ENABLE=true and point DNS
+      # for LEGACY_APP_HOST if the legacy app should remain externally routed.
+      - traefik.enable=${LEGACY_APP_TRAEFIK_ENABLE:-false}
+      - traefik.http.routers.app.rule=Host(`${LEGACY_APP_HOST:-app.get.servd.pro}`)
       - traefik.http.routers.app.entrypoints=websecure
       - traefik.http.routers.app.tls.certresolver=letsencrypt
       - traefik.http.services.app.loadbalancer.server.port=3000
+
+  # LinkStack for Get.Servd.Pro.
+  #
+  # Removal:
+  # 1. Delete this linkstack service block.
+  # 2. Delete the linkstack_data volume block at the bottom of this file.
+  # 3. If desired, remove persisted data with:
+  #    docker volume rm servd-platform_linkstack_data
+  # 4. Restore the app router above to Host(`get.servd.pro`) only if the legacy
+  #    Node app should reclaim the domain.
+  linkstack:
+    build:
+      context: ./LinkStack-Get-Servd-Pro
+    image: servd-linkstack-fork:latest
+    container_name: servd-linkstack
+    hostname: linkstack
+    restart: unless-stopped
+    environment:
+      TZ: UTC
+      SERVER_ADMIN: Get@Servd.Pro
+      HTTP_SERVER_NAME: get.servd.pro
+      HTTPS_SERVER_NAME: get.servd.pro
+      APP_URL: ${LINKSTACK_APP_URL:-https://get.servd.pro}
+      FORCE_HTTPS: "true"
+      LOG_LEVEL: info
+      PHP_MEMORY_LIMIT: 512M
+      UPLOAD_MAX_FILESIZE: 16M
+    volumes:
+      - linkstack_data:/htdocs
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.linkstack.rule=Host(`get.servd.pro`)
+      - traefik.http.routers.linkstack.entrypoints=websecure
+      - traefik.http.routers.linkstack.tls.certresolver=letsencrypt
+      - traefik.http.routers.linkstack.middlewares=linkstack-https-headers
+      - traefik.http.middlewares.linkstack-https-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.middlewares.linkstack-https-headers.headers.customresponseheaders.Strict-Transport-Security=max-age=31536000
+      - traefik.http.services.linkstack.loadbalancer.server.port=443
+      - traefik.http.services.linkstack.loadbalancer.server.scheme=https
 
   postgres:
     image: postgres:16-alpine
@@ -60,3 +106,7 @@ services:
 
 volumes:
   postgres_data:
+  # Persistent LinkStack application storage mounted at /htdocs.
+  # Remove with `docker volume rm servd-platform_linkstack_data` after removing
+  # the service if you want to delete all LinkStack data.
+  linkstack_data:
